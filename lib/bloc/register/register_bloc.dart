@@ -88,6 +88,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         isSuccess: false,
         errorMessage: 'Failed to Register',
       ));
+      emit(state.copyWith(errorMessage: ''));
     }
   }
 }

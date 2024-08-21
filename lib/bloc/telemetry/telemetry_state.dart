@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
+import 'package:onboarding/enums/telemetry_column.dart';
 import 'package:onboarding/models/telemetry_model.dart';
 
 class TelemetryState extends Equatable {
-  final String sortProp;
+  final TelemetryColumn sortColumn;
   final bool isAscending;
   final int startTimestamp;
   final int endTimestamp;
@@ -15,21 +16,21 @@ class TelemetryState extends Equatable {
   final List<TelemetryModel> telemetries;
 
   const TelemetryState({
-    this.sortProp = 'timestamp',
-    this.isAscending = true,
+    this.sortColumn = TelemetryColumn.id,
+    this.isAscending = false,
     this.startTimestamp = 0,
     this.endTimestamp = 4611686018427388000,
     this.minAltitudeFilter = 0,
     this.maxAltitudeFilter = 4611686018427388000,
     this.page = 1,
     this.pageSize = 10,
-    this.isLoading = false,
+    this.isLoading = true,
     this.errorMessage = '',
     this.telemetries = const [],
   });
 
   TelemetryState copyWith({
-    String? sortProp,
+    TelemetryColumn? sortColumn,
     bool? isAscending,
     int? startTimestamp,
     int? endTimestamp,
@@ -42,7 +43,7 @@ class TelemetryState extends Equatable {
     List<TelemetryModel>? telemetries,
   }) {
     return TelemetryState(
-      sortProp: sortProp ?? this.sortProp,
+      sortColumn: sortColumn ?? this.sortColumn,
       isAscending: isAscending ?? this.isAscending,
       startTimestamp: startTimestamp ?? this.startTimestamp,
       endTimestamp: endTimestamp ?? this.endTimestamp,
@@ -58,7 +59,7 @@ class TelemetryState extends Equatable {
 
   @override
   List<Object> get props => [
-        sortProp,
+        sortColumn,
         isAscending,
         startTimestamp,
         endTimestamp,

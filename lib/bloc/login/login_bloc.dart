@@ -41,6 +41,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(state.copyWith(isSubmitting: false, isSuccess: true));
     } catch (e) {
       emit(state.copyWith(isSubmitting: false, isSuccess: false, errorMessage: e.toString()));
+      emit(state.copyWith(errorMessage: ''));
     }
   }
 }

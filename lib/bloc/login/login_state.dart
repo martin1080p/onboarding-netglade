@@ -12,7 +12,7 @@ class LoginState extends Equatable {
   const LoginState({
     this.username = '',
     this.usernameError = '',
-    this.password = '',
+    this.password = '.',
     this.passwordError = '',
     this.isSubmitting = false,
     this.isSuccess = false,

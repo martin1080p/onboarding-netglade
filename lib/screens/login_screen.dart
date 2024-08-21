@@ -17,22 +17,22 @@ class LoginScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Login'),
         ),
-        body: BlocBuilder<LoginBloc, LoginState>(
-          builder: (context, state) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (state.isSuccess) {
-                Navigator.pushReplacementNamed(context, '/home');
-              }
-              if (state.errorMessage.isNotEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.errorMessage),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
-            });
-            return Padding(
+        body: BlocListener<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state.isSuccess) {
+              Navigator.pushReplacementNamed(context, '/home');
+            }
+            if (state.errorMessage.isNotEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMessage),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          child: BlocBuilder<LoginBloc, LoginState>(
+            builder: (context, state) => Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
                 key: formKey,
@@ -77,8 +77,8 @@ class LoginScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            );
-          },
+            ),
+          ),
         ),
       ),
     );

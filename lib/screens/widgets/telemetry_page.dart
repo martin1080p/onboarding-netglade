@@ -1,10 +1,9 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:onboarding/bloc/telemetry/telemetry_bloc.dart';
 import 'package:onboarding/bloc/telemetry/telemetry_event.dart';
 import 'package:onboarding/bloc/telemetry/telemetry_state.dart';
+import 'package:onboarding/enums/telemetry_column.dart';
 import 'package:onboarding/models/telemetry_model.dart';
 
 // ignore: must_be_immutable
@@ -14,14 +13,15 @@ class TelemetryPage extends StatelessWidget {
   DateTime? _selectedDate;
   final TextEditingController _minAltitudeController = TextEditingController();
   final TextEditingController _maxAltitudeController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
-  final List<String> columnNames = [
-    'ID',
-    'Altitude',
-    'Timestamp',
-    'Temperature',
-    'Velocity',
-    'Radiation',
+  final List<TelemetryColumn> columnNames = [
+    TelemetryColumn.id,
+    TelemetryColumn.altitude,
+    TelemetryColumn.timestamp,
+    TelemetryColumn.temperature,
+    TelemetryColumn.velocity,
+    TelemetryColumn.radiation,
   ];
 
   void _onFilter() {
@@ -49,52 +49,24 @@ class TelemetryPage extends StatelessWidget {
       }*/
   }
 
+  void onSort(TelemetryState state, BuildContext context, TelemetryColumn column, bool ascending) {
+    context.read<TelemetryBloc>().add(
+        SortTelemetry(telemetries: state.telemetries, sortColumn: column, isAscending: ascending));
+  }
+
+  void onScroll(TelemetryState state, BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        context.read<TelemetryBloc>().add(FetchTelemetry(
+              sortColumn: state.sortColumn,
+              isAscending: state.isAscending,
+            ));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    String? getColumnName(int index) {
-      switch (index) {
-        case 0:
-          return 'telemetryId';
-        case 1:
-          return 'altitude';
-        case 2:
-          return 'timestamp';
-        case 3:
-          return 'temperature';
-        case 4:
-          return 'velocity';
-        case 5:
-          return 'radiation';
-        default:
-          return null;
-      }
-    }
-
-    int? getColumnIndex(String columnName) {
-      switch (columnName) {
-        case 'telemetryId':
-          return 0;
-        case 'altitude':
-          return 1;
-        case 'timestamp':
-          return 2;
-        case 'temperature':
-          return 3;
-        case 'velocity':
-          return 4;
-        case 'radiation':
-          return 5;
-        default:
-          return null;
-      }
-    }
-
-    void onSort(TelemetryState state, BuildContext context, int columnIndex, bool ascending) {
-      final column = getColumnName(columnIndex)!;
-
-      context.read<TelemetryBloc>().add(SortTelemetry(sortProp: column, isAscending: ascending));
-    }
-
     List<DataRow> buildDataRows(List<TelemetryModel> telemetryList) {
       return telemetryList
           .map(
@@ -113,7 +85,11 @@ class TelemetryPage extends StatelessWidget {
     }
 
     return BlocProvider<TelemetryBloc>(
-      create: (context) => TelemetryBloc(),
+      create: (context) => TelemetryBloc()
+        ..add(FetchTelemetry(
+          sortColumn: TelemetryColumn.id,
+          isAscending: false,
+        )),
       child: Column(
         children: [
           Padding(
@@ -152,30 +128,48 @@ class TelemetryPage extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: BlocBuilder<TelemetryBloc, TelemetryState>(
-              builder: (context, state) {
-                if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (state.errorMessage.isNotEmpty) {
-                  return Center(child: Text(state.errorMessage));
-                }
-
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    sortColumnIndex: getColumnIndex(state.sortProp),
-                    sortAscending: state.isAscending,
-                    columns: columnNames
-                        .map((column) => DataColumn(
-                            label: Text(column),
-                            onSort: (i, asc) => onSort(state, context, i, asc)))
-                        .toList(),
-                    rows: buildDataRows(state.telemetries),
-                  ),
-                );
+            child: BlocListener<TelemetryBloc, TelemetryState>(
+              listener: (context, state) {
+                onScroll(state, context);
               },
+              child: BlocBuilder<TelemetryBloc, TelemetryState>(
+                builder: (context, state) {
+                  if (state.errorMessage.isNotEmpty) {
+                    return Center(child: Text(state.errorMessage));
+                  }
+
+                  return NotificationListener(
+                    onNotification: (notification) {
+                      if (notification is ScrollEndNotification) {
+                        onScroll(state, context);
+                      }
+                      return true;
+                    },
+                    child: SingleChildScrollView(
+                      controller: _scrollController,
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        children: [
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: DataTable(
+                              sortColumnIndex: state.sortColumn.index,
+                              sortAscending: state.isAscending,
+                              columns: columnNames
+                                  .map((column) => DataColumn(
+                                      label: Text(column.label),
+                                      onSort: (i, asc) => onSort(state, context, column, asc)))
+                                  .toList(),
+                              rows: buildDataRows(state.telemetries),
+                            ),
+                          ),
+                          if (state.isLoading) const Center(child: LinearProgressIndicator()),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ],
