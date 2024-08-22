@@ -14,7 +14,7 @@ class HttpClient {
     storageRepository: StorageRepository.i,
   );
 
-  Future<http.Response> get(String endpoint) async {
+  Future<http.Response> get({required String endpoint}) async {
     final uri = Uri.parse('$baseUrl$endpoint');
     final http.Response response;
     try {
@@ -37,7 +37,32 @@ class HttpClient {
     return response;
   }
 
-  Future<http.Response> post(String endpoint, Map<String, dynamic> data) async {
+  Future<http.Response> delete({required String endpoint, Map<String, dynamic>? data}) async {
+    final uri = Uri.parse('$baseUrl$endpoint');
+    final http.Response response;
+
+    try {
+      response = await http.delete(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "*/*",
+          "Authorization": "Bearer $token",
+        },
+        body: jsonEncode(data),
+      );
+    } catch (e) {
+      throw Exception('Failed to send request');
+    }
+
+    if (response.statusCode != 200) {
+      throw Exception(response.body);
+    }
+
+    return response;
+  }
+
+  Future<http.Response> post({required String endpoint, Map<String, dynamic>? data}) async {
     final uri = Uri.parse('$baseUrl$endpoint');
     final http.Response response;
     try {

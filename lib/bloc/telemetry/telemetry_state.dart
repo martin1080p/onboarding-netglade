@@ -5,8 +5,8 @@ import 'package:onboarding/models/telemetry_model.dart';
 class TelemetryState extends Equatable {
   final TelemetryColumn sortColumn;
   final bool isAscending;
-  final int startTimestamp;
-  final int endTimestamp;
+  final DateTime startDate;
+  final DateTime endDate;
   final int minAltitudeFilter;
   final int maxAltitudeFilter;
   final int page;
@@ -14,26 +14,31 @@ class TelemetryState extends Equatable {
   final bool isLoading;
   final String errorMessage;
   final List<TelemetryModel> telemetries;
+  final int selectedTelemetryId;
+  final bool hasReachedMax;
 
-  const TelemetryState({
+  TelemetryState({
     this.sortColumn = TelemetryColumn.id,
     this.isAscending = false,
-    this.startTimestamp = 0,
-    this.endTimestamp = 4611686018427388000,
+    DateTime? startDate,
+    DateTime? endDate,
     this.minAltitudeFilter = 0,
     this.maxAltitudeFilter = 4611686018427388000,
-    this.page = 1,
+    this.page = 0,
     this.pageSize = 10,
     this.isLoading = true,
     this.errorMessage = '',
     this.telemetries = const [],
-  });
+    this.selectedTelemetryId = -1,
+    this.hasReachedMax = false,
+  })  : startDate = startDate ?? DateTime.now(),
+        endDate = endDate ?? DateTime.now();
 
   TelemetryState copyWith({
     TelemetryColumn? sortColumn,
     bool? isAscending,
-    int? startTimestamp,
-    int? endTimestamp,
+    DateTime? startDate,
+    DateTime? endDate,
     int? minAltitudeFilter,
     int? maxAltitudeFilter,
     int? page,
@@ -41,12 +46,14 @@ class TelemetryState extends Equatable {
     bool? isLoading,
     String? errorMessage,
     List<TelemetryModel>? telemetries,
+    int? selectedTelemetryId,
+    bool? hasReachedMax,
   }) {
     return TelemetryState(
       sortColumn: sortColumn ?? this.sortColumn,
       isAscending: isAscending ?? this.isAscending,
-      startTimestamp: startTimestamp ?? this.startTimestamp,
-      endTimestamp: endTimestamp ?? this.endTimestamp,
+      startDate: startDate,
+      endDate: endDate,
       minAltitudeFilter: minAltitudeFilter ?? this.minAltitudeFilter,
       maxAltitudeFilter: maxAltitudeFilter ?? this.maxAltitudeFilter,
       page: page ?? this.page,
@@ -54,6 +61,8 @@ class TelemetryState extends Equatable {
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage ?? this.errorMessage,
       telemetries: telemetries ?? this.telemetries,
+      selectedTelemetryId: selectedTelemetryId ?? this.selectedTelemetryId,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
   }
 
@@ -61,8 +70,8 @@ class TelemetryState extends Equatable {
   List<Object> get props => [
         sortColumn,
         isAscending,
-        startTimestamp,
-        endTimestamp,
+        startDate,
+        endDate,
         minAltitudeFilter,
         maxAltitudeFilter,
         page,
@@ -70,5 +79,7 @@ class TelemetryState extends Equatable {
         isLoading,
         errorMessage,
         telemetries,
+        selectedTelemetryId,
+        hasReachedMax,
       ];
 }

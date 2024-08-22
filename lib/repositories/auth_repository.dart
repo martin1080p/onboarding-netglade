@@ -16,8 +16,8 @@ class AuthRepository {
 
   Future<LoginModel> login(String username, String password) async {
     final response = await client.post(
-      '/login',
-      {
+      endpoint: '/login',
+      data: {
         'username': username,
         'password': password,
       },
@@ -32,8 +32,8 @@ class AuthRepository {
 
   Future<LoginModel> register(String username, String email, String password) async {
     final response = await client.post(
-      '/register',
-      {
+      endpoint: '/register',
+      data: {
         'username': username,
         'email': email,
         'password': password,
@@ -51,8 +51,8 @@ class AuthRepository {
 
   Future<LoginModel> registerAdmin(String username, String email, String password) async {
     final response = await client.post(
-      '/register-admin',
-      {
+      endpoint: '/register-admin',
+      data: {
         'username': username,
         'email': email,
         'password': password,

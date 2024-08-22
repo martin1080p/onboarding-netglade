@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:onboarding/models/user_model.dart';
 import 'package:onboarding/repositories/auth_repository.dart';
+import 'package:onboarding/screens/widgets/error_page.dart';
+import 'package:onboarding/screens/widgets/favorite_page.dart';
 import 'package:onboarding/screens/widgets/telemetry_page.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -22,8 +24,8 @@ class HomeScreen extends StatelessWidget {
     List<Widget> tabViews = [
       TelemetryPage(),
       const Icon(Icons.map_outlined),
-      const Icon(Icons.favorite_outline),
-      const Icon(Icons.error_outline),
+      FavoritePage(),
+      ErrorPage(),
       const Icon(Icons.person_outline),
     ];
 
