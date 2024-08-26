@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:onboarding/api/client.dart';
 import 'package:onboarding/bloc/favorite/favorite_state.dart';
@@ -57,13 +56,18 @@ class TelemetryRepository {
     return telemetries;
   }
 
-  Future<List<TelemetryModel>> getNewTelemetries(TelemetryState state) async {
-    final int startTimestamp = Helper.timestampFromDate(DateTime.fromMillisecondsSinceEpoch(
-        state.telemetries.map((e) => e.timestamp).reduce(max) * 1000));
-    final int endTimestamp = Helper.timestampFromDate(DateTime.now(), isEndOfDay: true);
+  Future<List<TelemetryModel>> getNewTelemetries({
+    required DateTime startDate,
+    required DateTime endDate,
+    required int pageSize,
+    int? minAltitudeFilter,
+    int? maxAltitudeFilter,
+  }) async {
+    final int startTimestamp = Helper.timestampFromDate(startDate);
+    final int endTimestamp = Helper.timestampFromDate(endDate, isEndOfDay: true);
     final response = await client.get(
         endpoint:
-            '/telemetry?startingTimeStamp=$startTimestamp&endingTimeStamp=$endTimestamp&lowestAltitude=${state.minAltitudeFilter}&highestAltitude=${state.maxAltitudeFilter}&page=1&pageSize=${state.pageSize}');
+            '/telemetry?startingTimeStamp=$startTimestamp&endingTimeStamp=$endTimestamp&lowestAltitude=${minAltitudeFilter ?? 0}&highestAltitude=${maxAltitudeFilter ?? 4611686018427388000}&page=1&pageSize=$pageSize');
 
     List<TelemetryModel> telemetries =
         (jsonDecode(response.body) as List).map((e) => TelemetryModel.fromJson(e)).toList();

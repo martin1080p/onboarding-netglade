@@ -10,9 +10,9 @@ class LoginState extends Equatable {
   final String errorMessage;
 
   const LoginState({
-    this.username = '',
+    this.username = 'Admin', //'',
     this.usernameError = '',
-    this.password = '',
+    this.password = 'Idk123.', //'',
     this.passwordError = '',
     this.isSubmitting = false,
     this.isPasswordVisible = false,

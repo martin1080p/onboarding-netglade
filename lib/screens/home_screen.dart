@@ -4,6 +4,7 @@ import 'package:onboarding/bloc/app/app_bloc.dart';
 import 'package:onboarding/bloc/app/app_state.dart';
 import 'package:onboarding/models/user_model.dart';
 import 'package:onboarding/repositories/auth_repository.dart';
+import 'package:onboarding/screens/widgets/chart_page.dart';
 import 'package:onboarding/screens/widgets/error_page.dart';
 import 'package:onboarding/screens/widgets/favorite_page.dart';
 import 'package:onboarding/screens/widgets/profile_page.dart';
@@ -28,7 +29,7 @@ class HomeScreen extends StatelessWidget {
 
     List<Widget> tabViews = [
       TelemetryPage(),
-      const Icon(Icons.map_outlined),
+      const ChartPage(),
       FavoritePage(),
       ErrorPage(),
       ProfilePage(),

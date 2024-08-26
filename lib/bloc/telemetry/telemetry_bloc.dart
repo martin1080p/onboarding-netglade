@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:onboarding/bloc/telemetry/telemetry_event.dart';
 import 'package:onboarding/bloc/telemetry/telemetry_state.dart';
@@ -36,7 +38,13 @@ class TelemetryBloc extends Bloc<TelemetryEvent, TelemetryState> {
   void onRefreshTelemetry(RefreshTelemetry event, Emitter<TelemetryState> emit) async {
     emit(state.copyWith(isRefreshing: true));
     try {
-      final newTelemetries = await TelemetryRepository.i.getNewTelemetries(state);
+      final newTelemetries = await TelemetryRepository.i.getNewTelemetries(
+          startDate: DateTime.fromMillisecondsSinceEpoch(
+              state.telemetries.map((e) => e.timestamp).reduce(max) * 1000),
+          endDate: DateTime.now(),
+          pageSize: state.pageSize,
+          minAltitudeFilter: state.minAltitudeFilter,
+          maxAltitudeFilter: state.maxAltitudeFilter);
       final sortedTelemetries = Helper.sortTelemetries(
           {...newTelemetries, ...state.telemetries}.toList(),
           state.sortColumn.getValue,
