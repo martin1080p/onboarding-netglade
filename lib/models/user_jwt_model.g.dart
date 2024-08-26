@@ -14,10 +14,8 @@ _$UserJWTModelImpl _$$UserJWTModelImplFromJson(Map<String, dynamic> json) =>
           as String,
       json['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
           as String,
-      (json['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
-              as List<dynamic>)
-          .map((e) => e as String?)
-          .toList(),
+      rolesFromJson(
+          json['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']),
     );
 
 Map<String, dynamic> _$$UserJWTModelImplToJson(_$UserJWTModelImpl instance) =>

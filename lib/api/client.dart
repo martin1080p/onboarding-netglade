@@ -12,6 +12,7 @@ class HttpClient {
       {required this.baseUrl, required this.storageRepository, required this.onUnauthorized});
 
   static final HttpClient i = HttpClient._(
+    // TODO: Update the base URL according to the API server
     baseUrl: "http://127.0.0.1:5104",
     storageRepository: StorageRepository.i,
     onUnauthorized: () => {},

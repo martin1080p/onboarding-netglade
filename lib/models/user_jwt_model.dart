@@ -14,7 +14,9 @@ class UserJWTModel with _$UserJWTModel {
     String email,
     @JsonKey(name: 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
     String id,
-    @JsonKey(name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
+    @JsonKey(
+        name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+        fromJson: rolesFromJson)
     List<String?> roles,
   ) = _UserJWTModel;
 
@@ -23,4 +25,14 @@ class UserJWTModel with _$UserJWTModel {
   get user => UserModel(id: id, isDeleted: false, name: name, email: email, userRoles: roles);
 
   factory UserJWTModel.fromJson(Map<String, dynamic> json) => _$UserJWTModelFromJson(json);
+}
+
+List<String?> rolesFromJson(dynamic json) {
+  if (json is String) {
+    return [json];
+  } else if (json is List) {
+    return json.cast<String?>();
+  } else {
+    throw Exception('Unexpected value for roles: $json');
+  }
 }

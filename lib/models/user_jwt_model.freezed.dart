@@ -30,7 +30,9 @@ mixin _$UserJWTModel {
       name:
           'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
   String get id => throw _privateConstructorUsedError;
-  @JsonKey(name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
+  @JsonKey(
+      name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+      fromJson: rolesFromJson)
   List<String?> get roles => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -58,7 +60,8 @@ abstract class $UserJWTModelCopyWith<$Res> {
               'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
       String id,
       @JsonKey(
-          name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
+          name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+          fromJson: rolesFromJson)
       List<String?> roles});
 }
 
@@ -122,7 +125,8 @@ abstract class _$$UserJWTModelImplCopyWith<$Res>
               'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
       String id,
       @JsonKey(
-          name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
+          name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+          fromJson: rolesFromJson)
       List<String?> roles});
 }
 
@@ -179,7 +183,8 @@ class _$UserJWTModelImpl extends _UserJWTModel {
               'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
       this.id,
       @JsonKey(
-          name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
+          name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+          fromJson: rolesFromJson)
       final List<String?> roles)
       : _roles = roles,
         super._();
@@ -202,7 +207,9 @@ class _$UserJWTModelImpl extends _UserJWTModel {
   final String id;
   final List<String?> _roles;
   @override
-  @JsonKey(name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
+  @JsonKey(
+      name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+      fromJson: rolesFromJson)
   List<String?> get roles {
     if (_roles is EqualUnmodifiableListView) return _roles;
     // ignore: implicit_dynamic_type
@@ -258,7 +265,8 @@ abstract class _UserJWTModel extends UserJWTModel {
               'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
       final String id,
       @JsonKey(
-          name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
+          name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+          fromJson: rolesFromJson)
       final List<String?> roles) = _$UserJWTModelImpl;
   const _UserJWTModel._() : super._();
 
@@ -279,7 +287,9 @@ abstract class _UserJWTModel extends UserJWTModel {
           'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
   String get id;
   @override
-  @JsonKey(name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
+  @JsonKey(
+      name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+      fromJson: rolesFromJson)
   List<String?> get roles;
   @override
   @JsonKey(ignore: true)

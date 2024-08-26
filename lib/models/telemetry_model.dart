@@ -16,5 +16,14 @@ class TelemetryModel with _$TelemetryModel {
     int radiation,
   ) = _TelemetryModel;
 
+  factory TelemetryModel.empty() => const TelemetryModel(
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+      );
+
   factory TelemetryModel.fromJson(Map<String, dynamic> json) => _$TelemetryModelFromJson(json);
 }

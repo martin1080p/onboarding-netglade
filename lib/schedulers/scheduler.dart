@@ -2,10 +2,12 @@ import 'dart:async';
 
 class Scheduler {
   final Duration interval;
-  late Timer timer;
+  Timer? timer;
   final Function callback;
 
   Scheduler({required this.interval, required this.callback});
+
+  bool get isRunning => timer?.isActive ?? false;
 
   void start() {
     timer = Timer.periodic(interval, (timer) {
@@ -14,6 +16,7 @@ class Scheduler {
   }
 
   void stop() {
-    timer.cancel();
+    if (timer == null) return;
+    timer!.cancel();
   }
 }
