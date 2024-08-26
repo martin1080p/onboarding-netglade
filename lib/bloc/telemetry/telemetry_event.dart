@@ -54,3 +54,5 @@ class LikeTelemetry extends TelemetryEvent {
 
   LikeTelemetry({required this.telemetryId});
 }
+
+class RefreshTelemetry extends TelemetryEvent {}

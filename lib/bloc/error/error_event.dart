@@ -13,3 +13,5 @@ class DeleteError extends FetchError {
 
   DeleteError({required this.errorId});
 }
+
+class RefreshError extends FetchError {}

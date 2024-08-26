@@ -1,7 +1,8 @@
 enum ErrorColumn {
   id(position: 0, name: 'errorId', label: 'ID'),
   timestamp(position: 1, name: 'timestamp', label: 'Timestamp'),
-  data(position: 2, name: 'data', label: 'Data');
+  dataBytes(position: 2, name: 'dataRaw', label: 'Data (bytes)'),
+  dataString(position: 2, name: 'dataString', label: 'Data (string)');
 
   const ErrorColumn({
     required this.position,

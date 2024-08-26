@@ -1,20 +1,30 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:onboarding/models/login_model.dart';
 import 'package:onboarding/repositories/storage_repository.dart';
 
 class HttpClient {
   final String baseUrl;
   final StorageRepository storageRepository;
-  String token = '';
+  void Function() onUnauthorized;
 
-  HttpClient._({required this.baseUrl, required this.storageRepository});
+  HttpClient._(
+      {required this.baseUrl, required this.storageRepository, required this.onUnauthorized});
 
   static final HttpClient i = HttpClient._(
-    baseUrl: "http://192.168.1.16:5104",
+    baseUrl: "http://127.0.0.1:5104",
     storageRepository: StorageRepository.i,
+    onUnauthorized: () => {},
   );
 
-  Future<http.Response> get({required String endpoint}) async {
+  Future<String> get token =>
+      storageRepository.readTokenData().then((value) => value[0] ?? '').catchError((e) => '');
+
+  Future<DateTime> get tokenExpiration => storageRepository
+      .readTokenData()
+      .then((value) => value[1] != null ? DateTime.parse(value[1]!) : DateTime(0));
+
+  Future<http.Response> get({required String endpoint, void Function()? unauthorizedHandle}) async {
     final uri = Uri.parse('$baseUrl$endpoint');
     final http.Response response;
     try {
@@ -23,11 +33,20 @@ class HttpClient {
         headers: {
           "Content-Type": "application/json",
           "Accept": "*/*",
-          "Authorization": "Bearer $token",
+          "Authorization": "Bearer ${await token}",
         },
       );
     } catch (e) {
       throw Exception('Failed to send request');
+    }
+
+    if (response.statusCode == 401) {
+      if (unauthorizedHandle != null) {
+        unauthorizedHandle();
+      } else {
+        onUnauthorized();
+      }
+      throw Exception(response.body);
     }
 
     if (response.statusCode != 200) {
@@ -37,7 +56,10 @@ class HttpClient {
     return response;
   }
 
-  Future<http.Response> delete({required String endpoint, Map<String, dynamic>? data}) async {
+  Future<http.Response> delete(
+      {required String endpoint,
+      Map<String, dynamic>? data,
+      void Function()? unauthorizedHandle}) async {
     final uri = Uri.parse('$baseUrl$endpoint');
     final http.Response response;
 
@@ -47,12 +69,21 @@ class HttpClient {
         headers: {
           "Content-Type": "application/json",
           "Accept": "*/*",
-          "Authorization": "Bearer $token",
+          "Authorization": "Bearer ${await token}",
         },
         body: jsonEncode(data),
       );
     } catch (e) {
       throw Exception('Failed to send request');
+    }
+
+    if (response.statusCode == 401) {
+      if (unauthorizedHandle != null) {
+        unauthorizedHandle();
+      } else {
+        onUnauthorized();
+      }
+      throw Exception(response.body);
     }
 
     if (response.statusCode != 200) {
@@ -62,7 +93,10 @@ class HttpClient {
     return response;
   }
 
-  Future<http.Response> post({required String endpoint, Map<String, dynamic>? data}) async {
+  Future<http.Response> post(
+      {required String endpoint,
+      Map<String, dynamic>? data,
+      void Function()? unauthorizedHandle}) async {
     final uri = Uri.parse('$baseUrl$endpoint');
     final http.Response response;
     try {
@@ -71,12 +105,21 @@ class HttpClient {
         headers: {
           "Content-Type": "application/json",
           "Accept": "*/*",
-          "Authorization": "Bearer $token",
+          "Authorization": "Bearer ${await token}",
         },
         body: jsonEncode(data),
       );
     } catch (e) {
       throw Exception('Failed to send request');
+    }
+
+    if (response.statusCode == 401) {
+      if (unauthorizedHandle != null) {
+        unauthorizedHandle();
+      } else {
+        onUnauthorized();
+      }
+      throw Exception(response.body);
     }
 
     if (response.statusCode != 200) {
@@ -86,8 +129,11 @@ class HttpClient {
     return response;
   }
 
-  Future<void> updateToken(String token) async {
-    this.token = token;
-    await storageRepository.writeToken(token);
+  Future<void> deleteToken() async {
+    await storageRepository.deleteTokenData();
+  }
+
+  Future<void> updateToken(LoginModel login) async {
+    await storageRepository.writeTokenData(login);
   }
 }

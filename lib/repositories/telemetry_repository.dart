@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:onboarding/api/client.dart';
 import 'package:onboarding/bloc/favorite/favorite_state.dart';
@@ -49,6 +50,20 @@ class TelemetryRepository {
     final response = await client.get(
         endpoint:
             '/telemetry?startingTimeStamp=$startTimestamp&endingTimeStamp=$endTimestamp&lowestAltitude=${state.minAltitudeFilter}&highestAltitude=${state.maxAltitudeFilter}&page=${state.page}&pageSize=${state.pageSize}');
+
+    List<TelemetryModel> telemetries =
+        (jsonDecode(response.body) as List).map((e) => TelemetryModel.fromJson(e)).toList();
+
+    return telemetries;
+  }
+
+  Future<List<TelemetryModel>> getNewTelemetries(TelemetryState state) async {
+    final int startTimestamp = Helper.timestampFromDate(DateTime.fromMillisecondsSinceEpoch(
+        state.telemetries.map((e) => e.timestamp).reduce(max) * 1000));
+    final int endTimestamp = Helper.timestampFromDate(DateTime.now(), isEndOfDay: true);
+    final response = await client.get(
+        endpoint:
+            '/telemetry?startingTimeStamp=$startTimestamp&endingTimeStamp=$endTimestamp&lowestAltitude=${state.minAltitudeFilter}&highestAltitude=${state.maxAltitudeFilter}&page=1&pageSize=${state.pageSize}');
 
     List<TelemetryModel> telemetries =
         (jsonDecode(response.body) as List).map((e) => TelemetryModel.fromJson(e)).toList();

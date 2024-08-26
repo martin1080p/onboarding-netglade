@@ -1,21 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:onboarding/bloc/app/app_bloc.dart';
+import 'package:onboarding/bloc/app/app_event.dart';
 import 'package:onboarding/bloc/login/login_event.dart';
 import 'package:onboarding/bloc/login/login_state.dart';
 import 'package:onboarding/repositories/auth_repository.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  String username = '';
-  String usernameError = '';
-  String password = '';
-  String passwordError = '';
-  bool isSubmitting = false;
-  bool isSuccess = false;
-  String errorMessage = '';
-
   LoginBloc() : super(const LoginState()) {
     on<LoginUsernameChanged>(onUsernameChanged);
     on<LoginPasswordChanged>(onPasswordChanged);
     on<LoginSubmited>(onSubmited);
+    on<LoginPasswordVisibilityChanged>(onPasswordVisibilityChanged);
+  }
+
+  void onPasswordVisibilityChanged(
+      LoginPasswordVisibilityChanged event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
   }
 
   void onUsernameChanged(LoginUsernameChanged event, Emitter<LoginState> emit) async {
@@ -38,9 +38,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(state.copyWith(isSubmitting: true));
     try {
       await AuthRepository.i.login(state.username, state.password);
-      emit(state.copyWith(isSubmitting: false, isSuccess: true));
+      AppBloc.i.add(Login());
     } catch (e) {
-      emit(state.copyWith(isSubmitting: false, isSuccess: false, errorMessage: e.toString()));
+      emit(state.copyWith(isSubmitting: false, errorMessage: e.toString()));
       emit(state.copyWith(errorMessage: ''));
     }
   }

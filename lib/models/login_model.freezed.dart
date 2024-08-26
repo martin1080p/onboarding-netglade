@@ -94,11 +94,11 @@ class __$$LoginModelImplCopyWithImpl<$Res>
     Object? expiresAt = null,
   }) {
     return _then(_$LoginModelImpl(
-      null == token
+      token: null == token
           ? _value.token
           : token // ignore: cast_nullable_to_non_nullable
               as String,
-      null == expiresAt
+      expiresAt: null == expiresAt
           ? _value.expiresAt
           : expiresAt // ignore: cast_nullable_to_non_nullable
               as String,
@@ -110,7 +110,8 @@ class __$$LoginModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$LoginModelImpl implements _LoginModel {
   const _$LoginModelImpl(
-      this.token, @JsonKey(name: 'expiration') this.expiresAt);
+      {required this.token,
+      @JsonKey(name: 'expiration') required this.expiresAt});
 
   factory _$LoginModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LoginModelImplFromJson(json);
@@ -155,8 +156,10 @@ class _$LoginModelImpl implements _LoginModel {
 }
 
 abstract class _LoginModel implements LoginModel {
-  const factory _LoginModel(final String token,
-      @JsonKey(name: 'expiration') final String expiresAt) = _$LoginModelImpl;
+  const factory _LoginModel(
+          {required final String token,
+          @JsonKey(name: 'expiration') required final String expiresAt}) =
+      _$LoginModelImpl;
 
   factory _LoginModel.fromJson(Map<String, dynamic> json) =
       _$LoginModelImpl.fromJson;

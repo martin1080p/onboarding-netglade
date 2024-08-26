@@ -18,20 +18,15 @@ enum TelemetryColumn {
   final String name;
   final String label;
 
-  dynamic getValue(TelemetryModel telemetry) {
-    switch (this) {
-      case TelemetryColumn.id:
-        return telemetry.id;
-      case TelemetryColumn.altitude:
-        return telemetry.altitude;
-      case TelemetryColumn.timestamp:
-        return telemetry.timestamp;
-      case TelemetryColumn.temperature:
-        return telemetry.temperature;
-      case TelemetryColumn.velocity:
-        return telemetry.velocity;
-      case TelemetryColumn.radiation:
-        return telemetry.radiation;
-    }
+  Comparable<dynamic> getValue(TelemetryModel telemetry) {
+    Map<TelemetryColumn, dynamic> map = {
+      TelemetryColumn.id: telemetry.id,
+      TelemetryColumn.altitude: telemetry.altitude,
+      TelemetryColumn.timestamp: telemetry.timestamp,
+      TelemetryColumn.temperature: telemetry.temperature,
+      TelemetryColumn.velocity: telemetry.velocity,
+      TelemetryColumn.radiation: telemetry.radiation,
+    };
+    return map[this];
   }
 }

@@ -5,6 +5,7 @@ class ErrorState extends Equatable {
   final int page;
   final int pageSize;
   final bool isLoading;
+  final bool isRefreshing;
   final String errorMessage;
   final List<ErrorModel> errors;
   final int selectedErrorId;
@@ -14,6 +15,7 @@ class ErrorState extends Equatable {
     this.page = 0,
     this.pageSize = 10,
     this.isLoading = true,
+    this.isRefreshing = false,
     this.errorMessage = '',
     this.errors = const [],
     this.selectedErrorId = -1,
@@ -24,6 +26,7 @@ class ErrorState extends Equatable {
     int? page,
     int? pageSize,
     bool? isLoading,
+    bool? isRefreshing,
     String? errorMessage,
     List<ErrorModel>? errors,
     int? selectedErrorId,
@@ -33,6 +36,7 @@ class ErrorState extends Equatable {
       page: page ?? this.page,
       pageSize: pageSize ?? this.pageSize,
       isLoading: isLoading ?? this.isLoading,
+      isRefreshing: isRefreshing ?? this.isRefreshing,
       errorMessage: errorMessage ?? this.errorMessage,
       errors: errors ?? this.errors,
       selectedErrorId: selectedErrorId ?? this.selectedErrorId,
@@ -45,6 +49,7 @@ class ErrorState extends Equatable {
         page,
         pageSize,
         isLoading,
+        isRefreshing,
         errorMessage,
         errors,
         selectedErrorId,

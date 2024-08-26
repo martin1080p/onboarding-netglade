@@ -9,11 +9,11 @@ part of 'user_jwt_model.dart';
 _$UserJWTModelImpl _$$UserJWTModelImplFromJson(Map<String, dynamic> json) =>
     _$UserJWTModelImpl(
       json['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
-          as String?,
+          as String,
       json['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress']
           as String,
       json['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
-          as String?,
+          as String,
       (json['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
               as List<dynamic>)
           .map((e) => e as String?)

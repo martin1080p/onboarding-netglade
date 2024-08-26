@@ -39,13 +39,14 @@ class TelemetryPage extends StatelessWidget {
   }
 
   void onScroll(BuildContext context, TelemetryState state) {
-    if (state.hasReachedMax) {
+    if (state.hasReachedMax || state.isLoading || !context.mounted) {
       return;
     }
 
-    if (context.mounted &&
-        _scrollController.positions.isNotEmpty &&
-        _scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+    if ((_scrollController.positions.isEmpty && state.page < 1) ||
+        (_scrollController.positions.isEmpty && state.telemetries.isNotEmpty) ||
+        (_scrollController.positions.isNotEmpty &&
+            _scrollController.position.pixels == _scrollController.position.maxScrollExtent)) {
       context.read<TelemetryBloc>().add(FetchTelemetry(
             sortColumn: state.sortColumn,
             isAscending: state.isAscending,
@@ -90,7 +91,6 @@ class TelemetryPage extends StatelessWidget {
       },
       child: BlocListener<TelemetryBloc, TelemetryState>(
         listener: (context, state) {
-          onScroll(context, state);
           if (state.errorMessage.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -101,6 +101,7 @@ class TelemetryPage extends StatelessWidget {
           }
         },
         child: BlocBuilder<TelemetryBloc, TelemetryState>(builder: (context, state) {
+          onScroll(context, state);
           return Column(
             children: [
               Padding(
@@ -208,42 +209,53 @@ class TelemetryPage extends StatelessWidget {
                     )
                   : const SizedBox.shrink(),
               Expanded(
-                child: NotificationListener(
-                  onNotification: (notification) {
-                    if (notification is ScrollEndNotification) {
-                      onScroll(context, state);
-                    }
-                    return true;
-                  },
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      children: [
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            sortColumnIndex: state.sortColumn.index,
-                            sortAscending: state.isAscending,
-                            columns: columnNames
-                                .map((column) => DataColumn(
-                                    label: Text(column.label),
-                                    onSort: (i, asc) => onSort(context, state, column, asc)))
-                                .toList(),
-                            rows: buildDataRows(context, state),
+                child: state.isLoading && state.telemetries.isEmpty
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : NotificationListener(
+                        onNotification: (notification) {
+                          if (notification is ScrollEndNotification) {
+                            onScroll(context, state);
+                          }
+                          return true;
+                        },
+                        child: SingleChildScrollView(
+                          controller: _scrollController,
+                          scrollDirection: Axis.vertical,
+                          child: Column(
+                            children: [
+                              Center(
+                                child: state.isRefreshing
+                                    ? const LinearProgressIndicator()
+                                    : const SizedBox(
+                                        height: 4,
+                                      ),
+                              ),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: DataTable(
+                                  sortColumnIndex: state.sortColumn.index,
+                                  sortAscending: state.isAscending,
+                                  columns: columnNames
+                                      .map((column) => DataColumn(
+                                          label: Text(column.label),
+                                          onSort: (i, asc) => onSort(context, state, column, asc)))
+                                      .toList(),
+                                  rows: buildDataRows(context, state),
+                                ),
+                              ),
+                              Center(
+                                child: state.isLoading && state.telemetries.isNotEmpty
+                                    ? const LinearProgressIndicator()
+                                    : const SizedBox(
+                                        height: 4,
+                                      ),
+                              )
+                            ],
                           ),
                         ),
-                        Center(
-                          child: state.isLoading
-                              ? const LinearProgressIndicator()
-                              : const SizedBox(
-                                  height: 8,
-                                ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
               ),
             ],
           );

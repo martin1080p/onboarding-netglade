@@ -130,35 +130,30 @@ class FavoritePage extends StatelessWidget {
                     )
                   : const SizedBox.shrink(),
               Expanded(
-                child: NotificationListener(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      children: [
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            sortColumnIndex: state.sortColumn.index,
-                            sortAscending: state.isAscending,
-                            columns: columnNames
-                                .map((column) => DataColumn(
-                                    label: Text(column.label),
-                                    onSort: (i, asc) => onSort(context, state, column, asc)))
-                                .toList(),
-                            rows: buildDataRows(context, state),
-                          ),
+                child: state.isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Column(
+                          children: [
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: DataTable(
+                                sortColumnIndex: state.sortColumn.index,
+                                sortAscending: state.isAscending,
+                                columns: columnNames
+                                    .map((column) => DataColumn(
+                                        label: Text(column.label),
+                                        onSort: (i, asc) => onSort(context, state, column, asc)))
+                                    .toList(),
+                                rows: buildDataRows(context, state),
+                              ),
+                            ),
+                          ],
                         ),
-                        Center(
-                          child: state.isLoading
-                              ? const LinearProgressIndicator()
-                              : const SizedBox(
-                                  height: 8,
-                                ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
               ),
             ],
           );

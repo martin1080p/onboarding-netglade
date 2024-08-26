@@ -9,7 +9,7 @@ class RegisterState extends Equatable {
   final String passwordError;
   final bool isAdmin;
   final bool isSubmitting;
-  final bool isSuccess;
+  final bool isPasswordVisible;
   final String errorMessage;
 
   const RegisterState({
@@ -21,7 +21,7 @@ class RegisterState extends Equatable {
     this.passwordError = '',
     this.isAdmin = false,
     this.isSubmitting = false,
-    this.isSuccess = false,
+    this.isPasswordVisible = false,
     this.errorMessage = '',
   });
 
@@ -42,7 +42,7 @@ class RegisterState extends Equatable {
     String? emailError,
     bool? isAdmin,
     bool? isSubmitting,
-    bool? isSuccess,
+    bool? isPasswordVisible,
     String? errorMessage,
   }) {
     return RegisterState(
@@ -54,7 +54,7 @@ class RegisterState extends Equatable {
       emailError: emailError ?? this.emailError,
       isAdmin: isAdmin ?? this.isAdmin,
       isSubmitting: isSubmitting ?? this.isSubmitting,
-      isSuccess: isSuccess ?? this.isSuccess,
+      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
@@ -69,7 +69,7 @@ class RegisterState extends Equatable {
         passwordError,
         isAdmin,
         isSubmitting,
-        isSuccess,
+        isPasswordVisible,
         errorMessage
       ];
 }

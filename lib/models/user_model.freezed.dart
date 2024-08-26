@@ -20,9 +20,10 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserModel {
-  String? get id => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
   bool get isDeleted => throw _privateConstructorUsedError;
-  String? get name => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
   List<String?> get userRoles => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -37,7 +38,11 @@ abstract class $UserModelCopyWith<$Res> {
       _$UserModelCopyWithImpl<$Res, UserModel>;
   @useResult
   $Res call(
-      {String? id, bool isDeleted, String? name, List<String?> userRoles});
+      {String id,
+      bool isDeleted,
+      String name,
+      String? email,
+      List<String?> userRoles});
 }
 
 /// @nodoc
@@ -53,23 +58,28 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? id = null,
     Object? isDeleted = null,
-    Object? name = freezed,
+    Object? name = null,
+    Object? email = freezed,
     Object? userRoles = null,
   }) {
     return _then(_value.copyWith(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       isDeleted: null == isDeleted
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
               as bool,
-      name: freezed == name
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
               as String?,
       userRoles: null == userRoles
           ? _value.userRoles
@@ -88,7 +98,11 @@ abstract class _$$UserModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? id, bool isDeleted, String? name, List<String?> userRoles});
+      {String id,
+      bool isDeleted,
+      String name,
+      String? email,
+      List<String?> userRoles});
 }
 
 /// @nodoc
@@ -102,25 +116,30 @@ class __$$UserModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? id = null,
     Object? isDeleted = null,
-    Object? name = freezed,
+    Object? name = null,
+    Object? email = freezed,
     Object? userRoles = null,
   }) {
     return _then(_$UserModelImpl(
-      freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
-      null == isDeleted
+              as String,
+      isDeleted: null == isDeleted
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
               as bool,
-      freezed == name
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
               as String?,
-      null == userRoles
+      userRoles: null == userRoles
           ? _value._userRoles
           : userRoles // ignore: cast_nullable_to_non_nullable
               as List<String?>,
@@ -132,7 +151,11 @@ class __$$UserModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserModelImpl extends _UserModel {
   const _$UserModelImpl(
-      this.id, this.isDeleted, this.name, final List<String?> userRoles)
+      {required this.id,
+      required this.isDeleted,
+      required this.name,
+      required this.email,
+      required final List<String?> userRoles})
       : _userRoles = userRoles,
         super._();
 
@@ -140,11 +163,13 @@ class _$UserModelImpl extends _UserModel {
       _$$UserModelImplFromJson(json);
 
   @override
-  final String? id;
+  final String id;
   @override
   final bool isDeleted;
   @override
-  final String? name;
+  final String name;
+  @override
+  final String? email;
   final List<String?> _userRoles;
   @override
   List<String?> get userRoles {
@@ -155,7 +180,7 @@ class _$UserModelImpl extends _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, isDeleted: $isDeleted, name: $name, userRoles: $userRoles)';
+    return 'UserModel(id: $id, isDeleted: $isDeleted, name: $name, email: $email, userRoles: $userRoles)';
   }
 
   @override
@@ -167,13 +192,14 @@ class _$UserModelImpl extends _UserModel {
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.email, email) || other.email == email) &&
             const DeepCollectionEquality()
                 .equals(other._userRoles, _userRoles));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, isDeleted, name,
+  int get hashCode => Object.hash(runtimeType, id, isDeleted, name, email,
       const DeepCollectionEquality().hash(_userRoles));
 
   @JsonKey(ignore: true)
@@ -191,19 +217,25 @@ class _$UserModelImpl extends _UserModel {
 }
 
 abstract class _UserModel extends UserModel {
-  const factory _UserModel(final String? id, final bool isDeleted,
-      final String? name, final List<String?> userRoles) = _$UserModelImpl;
+  const factory _UserModel(
+      {required final String id,
+      required final bool isDeleted,
+      required final String name,
+      required final String? email,
+      required final List<String?> userRoles}) = _$UserModelImpl;
   const _UserModel._() : super._();
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$UserModelImpl.fromJson;
 
   @override
-  String? get id;
+  String get id;
   @override
   bool get isDeleted;
   @override
-  String? get name;
+  String get name;
+  @override
+  String? get email;
   @override
   List<String?> get userRoles;
   @override

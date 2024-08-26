@@ -8,10 +8,13 @@ part of 'user_model.dart';
 
 _$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
     _$UserModelImpl(
-      json['id'] as String?,
-      json['isDeleted'] as bool,
-      json['name'] as String?,
-      (json['userRoles'] as List<dynamic>).map((e) => e as String?).toList(),
+      id: json['id'] as String,
+      isDeleted: json['isDeleted'] as bool,
+      name: json['name'] as String,
+      email: json['email'] as String?,
+      userRoles: (json['userRoles'] as List<dynamic>)
+          .map((e) => e as String?)
+          .toList(),
     );
 
 Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
@@ -19,5 +22,6 @@ Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
       'id': instance.id,
       'isDeleted': instance.isDeleted,
       'name': instance.name,
+      'email': instance.email,
       'userRoles': instance.userRoles,
     };

@@ -7,10 +7,10 @@ part 'login_model.g.dart';
 
 @freezed
 class LoginModel with _$LoginModel {
-  const factory LoginModel(
-    String token,
-    @JsonKey(name: 'expiration') String expiresAt,
-  ) = _LoginModel;
+  const factory LoginModel({
+    required String token,
+    @JsonKey(name: 'expiration') required String expiresAt,
+  }) = _LoginModel;
 
   factory LoginModel.fromJson(Map<String, dynamic> json) => _$LoginModelFromJson(json);
 }

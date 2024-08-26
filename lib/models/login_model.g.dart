@@ -8,8 +8,8 @@ part of 'login_model.dart';
 
 _$LoginModelImpl _$$LoginModelImplFromJson(Map<String, dynamic> json) =>
     _$LoginModelImpl(
-      json['token'] as String,
-      json['expiration'] as String,
+      token: json['token'] as String,
+      expiresAt: json['expiration'] as String,
     );
 
 Map<String, dynamic> _$$LoginModelImplToJson(_$LoginModelImpl instance) =>

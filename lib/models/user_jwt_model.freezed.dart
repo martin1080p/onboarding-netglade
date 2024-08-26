@@ -21,7 +21,7 @@ UserJWTModel _$UserJWTModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$UserJWTModel {
   @JsonKey(name: 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name')
-  String? get name => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
   @JsonKey(
       name:
           'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress')
@@ -29,7 +29,7 @@ mixin _$UserJWTModel {
   @JsonKey(
       name:
           'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
-  String? get id => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
   List<String?> get roles => throw _privateConstructorUsedError;
 
@@ -48,7 +48,7 @@ abstract class $UserJWTModelCopyWith<$Res> {
   $Res call(
       {@JsonKey(
           name: 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name')
-      String? name,
+      String name,
       @JsonKey(
           name:
               'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress')
@@ -56,7 +56,7 @@ abstract class $UserJWTModelCopyWith<$Res> {
       @JsonKey(
           name:
               'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
-      String? id,
+      String id,
       @JsonKey(
           name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
       List<String?> roles});
@@ -75,24 +75,24 @@ class _$UserJWTModelCopyWithImpl<$Res, $Val extends UserJWTModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = freezed,
+    Object? name = null,
     Object? email = null,
-    Object? id = freezed,
+    Object? id = null,
     Object? roles = null,
   }) {
     return _then(_value.copyWith(
-      name: freezed == name
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       roles: null == roles
           ? _value.roles
           : roles // ignore: cast_nullable_to_non_nullable
@@ -112,7 +112,7 @@ abstract class _$$UserJWTModelImplCopyWith<$Res>
   $Res call(
       {@JsonKey(
           name: 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name')
-      String? name,
+      String name,
       @JsonKey(
           name:
               'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress')
@@ -120,7 +120,7 @@ abstract class _$$UserJWTModelImplCopyWith<$Res>
       @JsonKey(
           name:
               'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
-      String? id,
+      String id,
       @JsonKey(
           name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
       List<String?> roles});
@@ -137,24 +137,24 @@ class __$$UserJWTModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = freezed,
+    Object? name = null,
     Object? email = null,
-    Object? id = freezed,
+    Object? id = null,
     Object? roles = null,
   }) {
     return _then(_$UserJWTModelImpl(
-      freezed == name
+      null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      freezed == id
+      null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       null == roles
           ? _value._roles
           : roles // ignore: cast_nullable_to_non_nullable
@@ -189,7 +189,7 @@ class _$UserJWTModelImpl extends _UserJWTModel {
 
   @override
   @JsonKey(name: 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name')
-  final String? name;
+  final String name;
   @override
   @JsonKey(
       name:
@@ -199,7 +199,7 @@ class _$UserJWTModelImpl extends _UserJWTModel {
   @JsonKey(
       name:
           'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
-  final String? id;
+  final String id;
   final List<String?> _roles;
   @override
   @JsonKey(name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
@@ -248,7 +248,7 @@ abstract class _UserJWTModel extends UserJWTModel {
   const factory _UserJWTModel(
       @JsonKey(
           name: 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name')
-      final String? name,
+      final String name,
       @JsonKey(
           name:
               'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress')
@@ -256,7 +256,7 @@ abstract class _UserJWTModel extends UserJWTModel {
       @JsonKey(
           name:
               'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
-      final String? id,
+      final String id,
       @JsonKey(
           name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
       final List<String?> roles) = _$UserJWTModelImpl;
@@ -267,7 +267,7 @@ abstract class _UserJWTModel extends UserJWTModel {
 
   @override
   @JsonKey(name: 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name')
-  String? get name;
+  String get name;
   @override
   @JsonKey(
       name:
@@ -277,7 +277,7 @@ abstract class _UserJWTModel extends UserJWTModel {
   @JsonKey(
       name:
           'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier')
-  String? get id;
+  String get id;
   @override
   @JsonKey(name: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role')
   List<String?> get roles;

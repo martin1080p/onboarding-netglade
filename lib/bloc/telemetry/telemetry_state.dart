@@ -12,6 +12,7 @@ class TelemetryState extends Equatable {
   final int page;
   final int pageSize;
   final bool isLoading;
+  final bool isRefreshing;
   final String errorMessage;
   final List<TelemetryModel> telemetries;
   final int selectedTelemetryId;
@@ -27,6 +28,7 @@ class TelemetryState extends Equatable {
     this.page = 0,
     this.pageSize = 10,
     this.isLoading = true,
+    this.isRefreshing = false,
     this.errorMessage = '',
     this.telemetries = const [],
     this.selectedTelemetryId = -1,
@@ -44,6 +46,7 @@ class TelemetryState extends Equatable {
     int? page,
     int? pageSize,
     bool? isLoading,
+    bool? isRefreshing,
     String? errorMessage,
     List<TelemetryModel>? telemetries,
     int? selectedTelemetryId,
@@ -59,6 +62,7 @@ class TelemetryState extends Equatable {
       page: page ?? this.page,
       pageSize: pageSize ?? this.pageSize,
       isLoading: isLoading ?? this.isLoading,
+      isRefreshing: isRefreshing ?? this.isRefreshing,
       errorMessage: errorMessage ?? this.errorMessage,
       telemetries: telemetries ?? this.telemetries,
       selectedTelemetryId: selectedTelemetryId ?? this.selectedTelemetryId,
@@ -77,6 +81,7 @@ class TelemetryState extends Equatable {
         page,
         pageSize,
         isLoading,
+        isRefreshing,
         errorMessage,
         telemetries,
         selectedTelemetryId,

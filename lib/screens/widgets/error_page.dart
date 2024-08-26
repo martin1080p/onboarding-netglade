@@ -15,17 +15,19 @@ class ErrorPage extends StatelessWidget {
   final List<ErrorColumn> columnNames = [
     ErrorColumn.id,
     ErrorColumn.timestamp,
-    ErrorColumn.data,
+    ErrorColumn.dataBytes,
+    ErrorColumn.dataString,
   ];
 
   void onScroll(BuildContext context, ErrorState state) {
-    if (state.hasReachedMax) {
+    if (state.hasReachedMax || state.isLoading || !context.mounted) {
       return;
     }
 
-    if (context.mounted &&
-        _scrollController.positions.isNotEmpty &&
-        _scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+    if ((_scrollController.positions.isEmpty && state.page < 1) ||
+        (_scrollController.positions.isEmpty && state.errors.isNotEmpty) ||
+        (_scrollController.positions.isNotEmpty &&
+            _scrollController.position.pixels == _scrollController.position.maxScrollExtent)) {
       context.read<ErrorBloc>().add(FetchError());
     }
   }
@@ -35,15 +37,18 @@ class ErrorPage extends StatelessWidget {
         .map(
           (error) => DataRow(
               selected: error.id == state.selectedErrorId,
-              onSelectChanged: (selected) {
-                context.read<ErrorBloc>().add(SelectError(errorId: error.id));
-              },
+              onSelectChanged: _isAdmin
+                  ? (selected) {
+                      context.read<ErrorBloc>().add(SelectError(errorId: error.id));
+                    }
+                  : null,
               cells: [
                 DataCell(Text(error.id.toString())),
                 DataCell(Text(DateTime.fromMillisecondsSinceEpoch(error.timestamp * 1000)
                     .toLocal()
                     .toString())),
-                DataCell(Text(error.data.toString())),
+                DataCell(Text(error.dataBytes.join(', '))),
+                DataCell(Text(error.originalString)),
               ]),
         )
         .toList();
@@ -65,6 +70,7 @@ class ErrorPage extends StatelessWidget {
         },
         child: BlocBuilder<ErrorBloc, ErrorState>(
           builder: (context, state) {
+            onScroll(context, state);
             return Column(
               children: [
                 state.selectedErrorId != -1
@@ -105,40 +111,51 @@ class ErrorPage extends StatelessWidget {
                       )
                     : const SizedBox.shrink(),
                 Expanded(
-                  child: NotificationListener(
-                    onNotification: (notification) {
-                      if (notification is ScrollEndNotification) {
-                        onScroll(context, state);
-                      }
-                      return true;
-                    },
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                        children: [
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: DataTable(
-                              columns: columnNames
-                                  .map((column) => DataColumn(
-                                        label: Text(column.label),
-                                      ))
-                                  .toList(),
-                              rows: buildDataRows(context, state),
+                  child: state.isLoading && state.errors.isEmpty
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : NotificationListener(
+                          onNotification: (notification) {
+                            if (notification is ScrollEndNotification) {
+                              onScroll(context, state);
+                            }
+                            return true;
+                          },
+                          child: SingleChildScrollView(
+                            controller: _scrollController,
+                            scrollDirection: Axis.vertical,
+                            child: Column(
+                              children: [
+                                Center(
+                                  child: state.isRefreshing
+                                      ? const LinearProgressIndicator()
+                                      : const SizedBox(
+                                          height: 4,
+                                        ),
+                                ),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: DataTable(
+                                    columns: columnNames
+                                        .map((column) => DataColumn(
+                                              label: Text(column.label),
+                                            ))
+                                        .toList(),
+                                    rows: buildDataRows(context, state),
+                                  ),
+                                ),
+                                Center(
+                                  child: state.isLoading && state.errors.isNotEmpty
+                                      ? const LinearProgressIndicator()
+                                      : const SizedBox(
+                                          height: 4,
+                                        ),
+                                )
+                              ],
                             ),
                           ),
-                          Center(
-                            child: state.isLoading
-                                ? const LinearProgressIndicator()
-                                : const SizedBox(
-                                    height: 8,
-                                  ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                        ),
                 ),
               ],
             );

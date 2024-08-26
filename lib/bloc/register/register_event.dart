@@ -21,3 +21,5 @@ class RegisterAdminChanged extends RegisterEvent {
   final bool isAdmin;
   RegisterAdminChanged({required this.isAdmin});
 }
+
+class RegisterPasswordVisibilityChanged extends RegisterEvent {}

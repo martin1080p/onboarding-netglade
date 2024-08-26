@@ -1,25 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:onboarding/bloc/telemetry/telemetry_event.dart';
 import 'package:onboarding/bloc/telemetry/telemetry_state.dart';
-import 'package:onboarding/enums/telemetry_column.dart';
 import 'package:onboarding/helpers/helper.dart';
-import 'package:onboarding/models/telemetry_model.dart';
 import 'package:onboarding/repositories/telemetry_repository.dart';
+import 'package:onboarding/schedulers/scheduler.dart';
 
 class TelemetryBloc extends Bloc<TelemetryEvent, TelemetryState> {
-  TelemetryColumn sortColumn = TelemetryColumn.id;
-  bool isAscending = false;
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
-  int minAltitudeFilter = 0;
-  int maxAltitudeFilter = 4611686018427388000;
-  int page = 0;
-  int pageSize = 10;
-  bool isLoading = true;
-  String errorMessage = '';
-  List<TelemetryModel> telemetries = [];
-  int selectedTelemetryId = -1;
-  bool hasReachedMax = false;
+  late final Scheduler scheduler;
 
   TelemetryBloc() : super(TelemetryState()) {
     on<FetchTelemetry>(onFetchTelemetry);
@@ -29,12 +16,42 @@ class TelemetryBloc extends Bloc<TelemetryEvent, TelemetryState> {
     on<DeleteTelemetry>(onDeleteTelemetry);
     on<LikeTelemetry>(onLikeTelemetry);
     on<SetDateRange>(onSetDateRange);
+    on<RefreshTelemetry>(onRefreshTelemetry);
+
+    scheduler = Scheduler(
+        interval: const Duration(seconds: 10),
+        callback: () {
+          add(RefreshTelemetry());
+        });
+
+    scheduler.start();
+  }
+
+  @override
+  Future<void> close() {
+    scheduler.stop();
+    return super.close();
+  }
+
+  void onRefreshTelemetry(RefreshTelemetry event, Emitter<TelemetryState> emit) async {
+    emit(state.copyWith(isRefreshing: true));
+    try {
+      final newTelemetries = await TelemetryRepository.i.getNewTelemetries(state);
+      final sortedTelemetries = Helper.sortTelemetries(
+          {...newTelemetries, ...state.telemetries}.toList(),
+          state.sortColumn.getValue,
+          state.isAscending);
+      emit(state.copyWith(telemetries: sortedTelemetries, isRefreshing: false));
+    } catch (e) {
+      _emitError(emit, "Failed to fetch telemetries");
+    }
   }
 
   void onDeleteTelemetry(DeleteTelemetry event, Emitter<TelemetryState> emit) async {
     emit(state.copyWith(selectedTelemetryId: -1, telemetries: [], isLoading: true));
     try {
       await TelemetryRepository.i.deleteTelemetry(event.telemetryId);
+      emit(state.copyWith(page: 1));
       final telemetries = await TelemetryRepository.i.getTelemetries(state);
       final sortedTelemetries =
           Helper.sortTelemetries(telemetries, state.sortColumn.getValue, state.isAscending);
@@ -95,6 +112,8 @@ class TelemetryBloc extends Bloc<TelemetryEvent, TelemetryState> {
     emit(state.copyWith(
         sortColumn: event.sortColumn,
         isAscending: event.isAscending,
+        startDate: state.startDate,
+        endDate: state.endDate,
         telemetries: sortedTelemetries));
   }
 
@@ -131,7 +150,7 @@ class TelemetryBloc extends Bloc<TelemetryEvent, TelemetryState> {
   }
 
   void _emitError(Emitter<TelemetryState> emit, String e) {
-    emit(state.copyWith(errorMessage: e, isLoading: false));
+    emit(state.copyWith(errorMessage: e, isLoading: false, isRefreshing: false));
     emit(state.copyWith(errorMessage: ''));
   }
 }

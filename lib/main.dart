@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:onboarding/bloc/app/app_bloc.dart';
 import 'app_router.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider(create: (context) => AppBloc.i),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

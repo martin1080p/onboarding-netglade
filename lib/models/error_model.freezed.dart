@@ -119,9 +119,10 @@ class __$$ErrorModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ErrorModelImpl implements _ErrorModel {
-  const _$ErrorModelImpl(
-      this.id, @JsonKey(name: 'errorData') this.data, this.timestamp);
+class _$ErrorModelImpl extends _ErrorModel {
+  _$ErrorModelImpl(
+      this.id, @JsonKey(name: 'errorData') this.data, this.timestamp)
+      : super._();
 
   factory _$ErrorModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ErrorModelImplFromJson(json);
@@ -168,11 +169,12 @@ class _$ErrorModelImpl implements _ErrorModel {
   }
 }
 
-abstract class _ErrorModel implements ErrorModel {
-  const factory _ErrorModel(
+abstract class _ErrorModel extends ErrorModel {
+  factory _ErrorModel(
       final int id,
       @JsonKey(name: 'errorData') final String data,
       final int timestamp) = _$ErrorModelImpl;
+  _ErrorModel._() : super._();
 
   factory _ErrorModel.fromJson(Map<String, dynamic> json) =
       _$ErrorModelImpl.fromJson;
